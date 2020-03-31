@@ -1,4 +1,4 @@
-# default
+# shootvideo
 
 ## Project setup
 ```
