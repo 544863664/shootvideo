@@ -4,10 +4,14 @@
 			<section class="experiment">
 				<div id="videos-container"></div>
 			</section>
+			<section class="experiment">
+				<canvas id="canvasCamera" width="320" height="240"></canvas>
+			</section>
 			<section class="experimentbtn">
 				<button id="openCamera" :disabled="openBtn.disabled" @click="openCameraBtn">打开摄像头</button>
 				<button id="start-recording" :disabled="startBtn.disabled" @click="startRecording">开始录制</button>
 				<button id="save-recording" :disabled="saveBtn.disabled" @click="saveRecording">保存</button>
+				<button @click="setRecording">拍照</button>
 			</section>
 		</article>
 	</div>
@@ -51,6 +55,10 @@
 				this.saver();
 			},
 			
+			setRecording() {
+				this.setImage();
+			},
+			
 			// 打开摄像头
 			openCamera() {
 				var videosContainer = document.getElementById('videos-container');
@@ -61,7 +69,7 @@
 				var video = document.createElement('video');
 
 				var videoWidth = 320;
-				var videoHeight = 240;
+				var videoHeight = 238;
 
 				video.controls = false;
 				video.muted = true;
@@ -121,6 +129,22 @@
 				});
 				this.saveBtn.disabled = true;
 				console.log(file);
+			},
+			//  绘制图片（拍照功能）
+			setImage() {
+				var thisCancas = document.getElementById('canvasCamera');
+				
+				var thisContext = thisCancas.getContext('2d');
+				
+				var thisVideo = document.getElementsByTagName("video")[0];
+				
+				// 点击，canvas画图
+				thisContext.drawImage(thisVideo, 0, 0, 318, 238)
+				// 获取图片base64链接
+				var image = thisCancas.toDataURL('image/png')
+				// this.imgSrc = image;
+				console.log(image)
+				// _
 			},
 			
 			// 停止录制
@@ -184,6 +208,22 @@
 					}
 				}
 			},
+			
+			// base64转文件
+			dataURLtoFile(dataurl, filename) {
+				var arr = dataurl.split(',')
+				var mime = arr[0].match(/:(.*?);/)[1]
+				var bstr = atob(arr[1])
+				var n = bstr.length
+				var u8arr = new Uint8Array(n)
+				while (n--) {
+					u8arr[n] = bstr.charCodeAt(n)
+				}
+				return new File([u8arr], filename, {
+					type: mime
+				})
+			},
+			
 		}
 	}
 </script>
@@ -193,9 +233,17 @@
 	.Record {
 		
 		article {
-			width: 400px;
+			width: 660px;
 			height: 400px;
 			margin: 0 auto;
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			-ms-flex-wrap: wrap;
+			flex-wrap: wrap;
+			-webkit-box-pack: center;
+			-ms-flex-pack: center;
+			justify-content: center;
 			border: 1px solid white;
 			background-color: white;
 			
@@ -206,8 +254,8 @@
 				margin: 50px auto;
 				
 				#videos-container {
-					width:320px;
-					height:240px;
+					width: 320px;
+					height: 240px;
 				}
 				
 			}

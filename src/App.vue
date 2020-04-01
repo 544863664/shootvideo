@@ -1,15 +1,12 @@
 <template>
 	<div id="app">
 		<router-view />
-		<Record />
 	</div>
 </template>
 
 <script>
-	import Record from '@/components/Record.vue'
 	export default {
-		name: 'app',
-		components: {Record}
+		name: 'app'
 	}
 </script>
 
