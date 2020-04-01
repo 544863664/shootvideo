@@ -11,7 +11,7 @@
 				<button id="openCamera" :disabled="openBtn.disabled" @click="openCameraBtn">打开摄像头</button>
 				<button id="start-recording" :disabled="startBtn.disabled" @click="startRecording">开始录制</button>
 				<button id="save-recording" :disabled="saveBtn.disabled" @click="saveRecording">保存</button>
-				<button @click="setRecording">拍照</button>
+				<button v-if="openBtn.disabled" @click="setRecording">{{startBtn.disabled?'抓拍':'拍照'}}</button>
 			</section>
 		</article>
 	</div>
