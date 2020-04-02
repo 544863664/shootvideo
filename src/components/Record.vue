@@ -4,13 +4,13 @@
 			<section class="experiment">
 				<div id="videos-container"></div>
 			</section>
-			<section class="experiment">
+			<section class="experiment" v-show="imgSrc">
 				<canvas id="canvasCamera" width="320" height="240"></canvas>
 			</section>
 			<section class="experimentbtn">
 				<button id="openCamera" :disabled="openBtn.disabled" @click="openCameraBtn">打开摄像头</button>
 				<button id="start-recording" :disabled="startBtn.disabled" @click="startRecording">开始录制</button>
-				<button id="save-recording" :disabled="saveBtn.disabled" @click="saveRecording">保存</button>
+				<!-- <button id="save-recording" :disabled="saveBtn.disabled" @click="saveRecording">保存</button> -->
 				<button v-if="openBtn.disabled" @click="setRecording">{{startBtn.disabled?'抓拍':'拍照'}}</button>
 			</section>
 		</article>
@@ -37,6 +37,7 @@
 				saveBtn: {
 					disabled: true
 				},
+				imgSrc: '',
 			}
 		},
 		methods: {
@@ -118,13 +119,13 @@
 						alert("录制成功!");
 						that.openBtn.disabled = false;
 						that.saveBtn.disabled = false;
-						//send();
+						that.saver();
 					});
 				}, 10000);
 			},
 			// 保存录制文件
 			saver() {
-				var file = new File([this.recorderFile], 'msr-' + (new Date).toISOString().replace(/:|\./g, '-') + '.mp4', {
+				var file = new File([this.recorderFile], (new Date() * 1000) + '.mp4', {
 					type: 'video/mp4'
 				});
 				this.saveBtn.disabled = true;
@@ -142,9 +143,10 @@
 				thisContext.drawImage(thisVideo, 0, 0, 318, 238)
 				// 获取图片base64链接
 				var image = thisCancas.toDataURL('image/png')
-				// this.imgSrc = image;
-				console.log(image)
-				// _
+				this.imgSrc = image;
+				// 转base64图片为文件类型	已当前时间戳为文件名
+				let nowTime = new Date() * 1000;
+				console.log(this.dataURLtoFile(image, nowTime))
 			},
 			
 			// 停止录制
@@ -261,6 +263,7 @@
 			}
 			
 			.experimentbtn {
+				width: 400px;
 				text-align: center;
 				border: none;
 				margin-top: 20px;
